@@ -12,3 +12,7 @@ services:
             - jenkins_home-portf:/var/jenkins_home
             - /var/run/docker.sock:/var/run/docker.sock
             - /usr/bin/docker:/usr/bin/docker:ro
+
+# run after docker up:
+#  $ docker-compose exec -u root jenkins bash
+#  $ chmod 666 /var/run/docker.sock            
