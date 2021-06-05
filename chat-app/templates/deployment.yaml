@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Chart.Name }}-dpl
+  name: {{ .Chart.Name }}-dpl
+spec:
+  replicas: {{ .Values.deploy.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-dpl
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-dpl
+    spec:
+      containers:
+      - image: {{ .Values.deploy.image.repository }}:{{ .Values.deploy.image.tag }}
+        name: {{ .Chart.Name }}-app
+        ports:  
+          - containerPort:  {{ .Values.deploy.containerPort }}
+        env:
+          - name: DB_URL
+            valueFrom:
+              secretKeyRef:
+                name: chat-secrets
+                key: db-uri 
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: chat-secrets
+                key: secret_key                
+        envFrom:
+          - configMapRef:
+              name: chat-cnfmap
+        resources: 
+          requests:
+            memory: {{ .Values.deploy.resources.req.memory }}
+            cpu: {{ .Values.deploy.resources.req.cpu }}
+          limits:
+            memory: {{ .Values.deploy.resources.lim.memory }}
+            cpu: {{ .Values.deploy.resources.lim.cpu }}
+
