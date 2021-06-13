@@ -72,3 +72,6 @@ mysql:
     database: chat
     username: flask
     password: flask
+
+  metrics:
+    enabled: true
